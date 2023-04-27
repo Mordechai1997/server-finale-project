@@ -49,8 +49,11 @@ const Product = sequelize.define('product', {
     delivery_or_loen: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
     }
-
 
 })
 

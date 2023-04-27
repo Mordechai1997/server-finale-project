@@ -24,6 +24,14 @@ router.post('/addproduct', controllerSignin.isAuthControllers, controllerCategor
 router.get('/getCountProducts', controllerSignin.isAuthControllers, controllerCategorys.getCountProducts)
 router.get('/getProductsByRange', controllerSignin.isAuthControllers, controllerCategorys.getProductsByRange)
 router.post('/ProductsBySearch', controllerSignin.isAuthControllers, controllerCategorys.ProductsBySearch)
+router.post('/addFavoritProduct', controllerSignin.isAuthControllers, controllerCategorys.addFavoritProduct)
+router.post('/removeFavoritProduct', controllerSignin.isAuthControllers, controllerCategorys.removeFavoritProduct)
+router.get('/getAllFavoritProducts', controllerSignin.isAuthControllers, controllerCategorys.getAllFavoritProducts)
+router.get('/getAllMyProducts', controllerSignin.isAuthControllers, controllerCategorys.getAllMyProducts)
+
+
+
+
 
 router.post('/uploadimage', upload.single('file'), function (req, res) {
     res.json({})

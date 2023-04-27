@@ -3,6 +3,8 @@ const nodemailer = require('nodemailer');
 var randtoken = require('rand-token');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
+const userService = require('../services/userService');
+const productService = require('../services/productService');
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -97,7 +99,6 @@ exports.resetPasswordEmail = (req, res, next) => {
                     })
                 } else {
                     console.log('Email sent: ' + info.response);
-                    console.log(dbUser)
                     dbUser.update({ userToken: token })
                         .then(() => {
                             return res.status(200).json({
@@ -160,12 +161,21 @@ exports.isAuth = async (req, res, next) => {
         else {
             const isVarify = jwt.verify(cookie, process.env.PASSWORD_EMAIL);
             if (isVarify.userId) {
+
+                const userData = await User.findOne({
+                    where: {
+                        userId: isVarify.userId,
+                    }
+                });
+
+                const listOfFavoritProducts = await productService.getAllFavoritProducts(isVarify.userId);
+                const listOfMytProducts = await productService.getAllMyProducts(isVarify.userId);
+
                 res.status(200).send({
-                    message: 'access exist', userInfo: await User.findOne({
-                        where: {
-                            userId: isVarify.userId,
-                        }
-                    })
+                    message: 'access exist',
+                    userInfo: userData,
+                    listOfFavoritProducts: listOfFavoritProducts,
+                    listOfMyProducts: listOfMytProducts
                 });
             }
         }
@@ -214,16 +224,24 @@ exports.getEmailUserByMemberId = async (req, res, next) => {
 exports.updateUserDetails = async (req, res, next) => {
     try {
         var { id, email, name, phoneNumber } = req.body;
-        await User.update({ email, username: name, phoneNumber }, { where: { userId: id } });
-        var newUser = await User.findOne({
-            where: {
-                userId: id
-            }
-        });
-        return res.status(200).json(newUser);
+        const user = await userService.updateUserDetails(id, email, name, phoneNumber)
+        return res.status(200).send({ type: "success", message: "The details have been successfully updated", data: user });
     } catch (err) {
-        return res.status(500).send({ message: "Somthing went worng in isAuth" });
+        return res.status(200).send({ type: "error", message: err + " " });
+    }
 
+}
+exports.getAllUserNotifications = async (req, res, next) => {
+    try {
+        const cookie = req.cookies.token;
+        if (!cookie) {
+            res.status(401).send({ message: "not auth" });
+        }
+        const isVarify = jwt.verify(cookie, process.env.PASSWORD_EMAIL);
+        const notifications = await userService.getAllUserNotifications(isVarify.userId);
+        return res.status(200).send(notifications);
+    } catch (err) {
+        return res.status(200).send({ type: "error", message: err + " " });
     }
 
 }
