@@ -24,6 +24,10 @@ const UserNotification = sequelize.define('userNotification', {
     productId: {
         type: DataTypes.INTEGER,
         allowNull: true
+    },
+    userViewedTheAlert: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
     }
 
 })

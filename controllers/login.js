@@ -206,13 +206,17 @@ exports.isAuthControllers = (req, res, next) => {
 }
 exports.getEmailUserByMemberId = async (req, res, next) => {
     try {
-        var { id, password } = req.query;
+        var { id, productId } = req.query;
+        
+        const cookie = req.cookies.token;
+        if (!cookie) {
+            res.status(401).send({ message: "not auth" });
+        }
 
-        const user = await User.findOne({
-            where: {
-                userId: id
-            }
-        });
+        const user = await productService.getUserById(id);
+        const userId = await userService.getUserIdByToken(cookie);
+
+        await productService.addUserNotification(productId, userId, 1);
 
         return res.status(200).json({ email: user.email, name: user.username });
     } catch (err) {
@@ -237,8 +241,8 @@ exports.getAllUserNotifications = async (req, res, next) => {
         if (!cookie) {
             res.status(401).send({ message: "not auth" });
         }
-        const isVarify = jwt.verify(cookie, process.env.PASSWORD_EMAIL);
-        const notifications = await userService.getAllUserNotifications(isVarify.userId);
+        const userId = await userService.getUserIdByToken(cookie);
+        const notifications = await userService.getAllUserNotifications(userId);
         return res.status(200).send(notifications);
     } catch (err) {
         return res.status(200).send({ type: "error", message: err + " " });

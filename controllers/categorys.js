@@ -105,10 +105,13 @@ exports.ProductsBySearch = async (req, res) => {
 exports.getProductById = async (req, res) => {
     try {
         const { id } = req.query;
+        console.log('\n'+id+'\n')
         const query = `SELECT  * FROM products AS p JOIN categorys AS c ON p.category_type=c.CategoryId 
         WHERE product_id=${id} and active=1  LIMIT 1`;
 
         const [result, metadata] = await sequelize.query(query);
+        console.log('\n'+result[0]+'\n')
+
         res.status(200).send(result[0])
 
     } catch (err) {
@@ -121,7 +124,7 @@ exports.addFavoritProduct = async (req, res) => {
     try {
         const { userId, productId } = req.body;
 
-        await productService.addUserNotification(productId, userId)
+        await productService.addUserNotification(productId, userId, 3)
         const like = await productService.addFavoritProduct(userId, productId)
 
         res.status(200).send(like)

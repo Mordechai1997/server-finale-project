@@ -1,6 +1,7 @@
 const UserNotification = require('../models/userNotification');
 const Like = require('../models/likes');
 const Product = require('../models/product');
+const User = require('../models/users');
 
 const sequelize = require('../db');
 
@@ -91,13 +92,14 @@ const getUserIdByProductId = async (productId) => {
         return err
     }
 }
-const addUserNotification = async (id, productId, userId) => {
+const addUserNotification = async (id, productId, userId, type) => {
     try {
         const userAlert = await UserNotification.findOne({
             where: {
                 userId: id,
                 userIdLikeIt: userId,
-                productId: productId
+                productId: productId,
+                typeNotification: type
             }
         })
         if (!userAlert) {
@@ -105,7 +107,7 @@ const addUserNotification = async (id, productId, userId) => {
                 userId: id,
                 userIdLikeIt: userId,
                 productId: productId,
-                typeNotification: 1
+                typeNotification: type
             })
         }
     } catch (err) {
@@ -126,6 +128,21 @@ const getAllUserNotifications = async (id) => {
         throw err;
     }
 }
+const getUserById = async (id) => {
+    try {
+
+        const user = await User.findOne({
+            where: {
+                userId: id
+            }
+        });
+
+        return user
+
+    } catch (err) {
+        return err
+    }
+}
 module.exports = productRepo = {
     getAllFavoritProducts,
     addFavoritProduct,
@@ -134,6 +151,7 @@ module.exports = productRepo = {
     getAllMyProducts,
     getUserIdByProductId,
     addUserNotification,
-    getAllUserNotifications
+    getAllUserNotifications,
+    getUserById
 }
 

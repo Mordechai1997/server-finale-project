@@ -8,7 +8,9 @@ router.get('/reset-password-email', controllerSignin.resetPasswordEmail)
 router.post('/update-password', controllerSignin.updatePassword)
 router.get('/getEmailUserByMemberId',controllerSignin.isAuthControllers ,controllerSignin.getEmailUserByMemberId)
 router.post('/updateUserDetails',controllerSignin.isAuthControllers ,controllerSignin.updateUserDetails)
-router.get('/auth', controllerSignin.isAuth)
+router.get('/auth', controllerSignin.isAuth);
+router.get('/getAllUserNotifications',controllerSignin.isAuthControllers ,controllerSignin.getAllUserNotifications)
+
 
 
 

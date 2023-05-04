@@ -43,12 +43,22 @@ const getAllMyProducts = async (userId) => {
         return err;
     }
 }
-const addUserNotification = async (productId, userId) => {
+const addUserNotification = async (productId, userId, type) => {
     try {
 
         const id = await productRepo.getUserIdByProductId(productId)
-        await productRepo.addUserNotification(id, productId, userId)
+        await productRepo.addUserNotification(id, productId, userId, type)
 
+    } catch (err) {
+        return err;
+    }
+}
+const getUserById = async (id ) => {
+    try {
+
+        const user = await productRepo.getUserById(id)
+
+        return user;
     } catch (err) {
         return err;
     }
@@ -58,6 +68,7 @@ module.exports = productService = {
     addFavoritProduct,
     removeFavoritProduct,
     getAllMyProducts,
-    addUserNotification
+    addUserNotification,
+    getUserById
 }
 
