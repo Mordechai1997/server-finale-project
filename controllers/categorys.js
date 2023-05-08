@@ -24,7 +24,7 @@ exports.addproduct = async (req, res) => {
             phone_number: req.body.phone,
             delivery_or_loen: req.body.deliveryOrLoen,
             description: req.body.description,
-            active:true
+            active: true
         })).then(() => {
             return res.status(200).json({
                 message: 'The post was successfully published!'
@@ -105,12 +105,11 @@ exports.ProductsBySearch = async (req, res) => {
 exports.getProductById = async (req, res) => {
     try {
         const { id } = req.query;
-        console.log('\n'+id+'\n')
+
         const query = `SELECT  * FROM products AS p JOIN categorys AS c ON p.category_type=c.CategoryId 
         WHERE product_id=${id} and active=1  LIMIT 1`;
 
         const [result, metadata] = await sequelize.query(query);
-        console.log('\n'+result[0]+'\n')
 
         res.status(200).send(result[0])
 
@@ -165,4 +164,40 @@ exports.getAllMyProducts = async (req, res) => {
         res.status(500).send({ message: "Somthing went worng" });
     }
 
+}
+exports.getMyProductById = async (req, res) => {
+    try {
+        const { id } = req.query;
+        const cookie = req.cookies.token;
+
+        if (!cookie) {
+            res.status(401).send({ message: "not auth" });
+        }
+
+        const userId = await userService.getUserIdByToken(cookie);
+        const product = await productService.getMyProductAndCategoryById(id, userId)
+
+        res.status(200).send(product)
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ message: "Somthing went worng" });
+    }
+}
+exports.updateMyProduct = async (req, res) => {
+    try {
+        const data = req.body;
+        console.log(data)
+        const resProduct = await productService.updateMyProduct(data)
+
+        return res.status(200).json({
+            product: resProduct,
+            message: 'The post was successfully published!'
+        })
+
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ message: "Somthing went worng" });
+    }
 }

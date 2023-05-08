@@ -143,6 +143,39 @@ const getUserById = async (id) => {
         return err
     }
 }
+const getProductAndCategoryById = async (id) => {
+    try {
+        const query = `SELECT  * FROM products AS p JOIN categorys AS c ON p.category_type=c.CategoryId 
+        WHERE product_id=${id} and active=1  LIMIT 1`;
+
+        const [result, metadata] = await sequelize.query(query);
+        return result[0];
+
+    } catch (err) {
+        return err;
+    }
+}
+const updateMyProduct = async (data) => {
+    try {
+      
+
+        const res = await Product.update({
+            title: data.title,
+            category_type: data.categoryType,
+            image_name: data.fileName,
+            city: data.city,
+            street: data.street,
+            numberAtHome: data.numberAtHome,
+            phone_number: data.phone,
+            delivery_or_loen: data.deliveryOrLoen,
+            description: data.description,
+            active: true
+        }, { where: { product_id: data.productId, user_id: data.userId } })
+        return res;
+    } catch (err) {
+        return err;
+    }
+}
 module.exports = productRepo = {
     getAllFavoritProducts,
     addFavoritProduct,
@@ -152,6 +185,8 @@ module.exports = productRepo = {
     getUserIdByProductId,
     addUserNotification,
     getAllUserNotifications,
-    getUserById
+    getUserById,
+    getProductAndCategoryById,
+    updateMyProduct
 }
 

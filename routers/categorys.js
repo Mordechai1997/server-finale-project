@@ -28,6 +28,9 @@ router.post('/addFavoritProduct', controllerSignin.isAuthControllers, controller
 router.post('/removeFavoritProduct', controllerSignin.isAuthControllers, controllerCategorys.removeFavoritProduct)
 router.get('/getAllFavoritProducts', controllerSignin.isAuthControllers, controllerCategorys.getAllFavoritProducts)
 router.get('/getAllMyProducts', controllerSignin.isAuthControllers, controllerCategorys.getAllMyProducts)
+router.get('/getMyProductById', controllerSignin.isAuthControllers, controllerCategorys.getMyProductById)
+router.post('/updateMyProduct', controllerSignin.isAuthControllers, controllerCategorys.updateMyProduct)
+
 
 
 

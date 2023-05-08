@@ -53,12 +53,44 @@ const addUserNotification = async (productId, userId, type) => {
         return err;
     }
 }
-const getUserById = async (id ) => {
+const getUserById = async (id) => {
     try {
 
         const user = await productRepo.getUserById(id)
 
         return user;
+    } catch (err) {
+        return err;
+    }
+}
+const getMyProductAndCategoryById = async (id, userId) => {
+    try {
+
+        const product = await productRepo.getProductAndCategoryById(id)
+        if (product.user_id === userId) {
+            return product;
+
+        }
+        return null;
+
+    } catch (err) {
+        return err;
+    }
+}
+const updateMyProduct = async (data) => {
+    try {
+        const productId = data.productId;
+        console.log(productId)
+
+        const userId = await productRepo.getUserIdByProductId(productId)
+        console.log(data.userId, userId);
+        if (data.userId === userId) {
+            console.log(data.userId, userId);
+
+            return await productRepo.updateMyProduct(data);;
+        }
+        return null;
+
     } catch (err) {
         return err;
     }
@@ -69,6 +101,8 @@ module.exports = productService = {
     removeFavoritProduct,
     getAllMyProducts,
     addUserNotification,
-    getUserById
+    getUserById,
+    getMyProductAndCategoryById,
+    updateMyProduct
 }
 
