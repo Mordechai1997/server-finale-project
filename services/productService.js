@@ -80,14 +80,35 @@ const getMyProductAndCategoryById = async (id, userId) => {
 const updateMyProduct = async (data) => {
     try {
         const productId = data.productId;
-        console.log(productId)
-
         const userId = await productRepo.getUserIdByProductId(productId)
-        console.log(data.userId, userId);
         if (data.userId === userId) {
-            console.log(data.userId, userId);
-
             return await productRepo.updateMyProduct(data);;
+        }
+        return null;
+
+    } catch (err) {
+        return err;
+    }
+}
+const deleteMyProduct = async (productId, userId) => {
+    try {
+        const userIdByProductId = await productRepo.getUserIdByProductId(productId)
+
+        if (userIdByProductId === userId) {
+            return await productRepo.deleteMyProduct(productId);;
+        }
+        return null;
+
+    } catch (err) {
+        return err;
+    }
+}
+const userViewedTheAlert = async (notificationId, userId) => {
+    try {
+        const userIdByNotificationId = await productRepo.getUserIdByNotificationId(notificationId)
+        console.log("\n" + userIdByNotificationId, userId + "\n")
+        if (userIdByNotificationId === userId) {
+            return await productRepo.userViewedTheAlert(notificationId);;
         }
         return null;
 
@@ -103,6 +124,8 @@ module.exports = productService = {
     addUserNotification,
     getUserById,
     getMyProductAndCategoryById,
-    updateMyProduct
+    updateMyProduct,
+    deleteMyProduct,
+    userViewedTheAlert
 }
 

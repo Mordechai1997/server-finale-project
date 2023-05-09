@@ -29,7 +29,11 @@ router.post('/removeFavoritProduct', controllerSignin.isAuthControllers, control
 router.get('/getAllFavoritProducts', controllerSignin.isAuthControllers, controllerCategorys.getAllFavoritProducts)
 router.get('/getAllMyProducts', controllerSignin.isAuthControllers, controllerCategorys.getAllMyProducts)
 router.get('/getMyProductById', controllerSignin.isAuthControllers, controllerCategorys.getMyProductById)
-router.post('/updateMyProduct', controllerSignin.isAuthControllers, controllerCategorys.updateMyProduct)
+router.post('/updateMyProduct', controllerSignin.isAuthControllers, controllerCategorys.updateMyProduct);
+router.post('/deleteMyProduct', controllerSignin.isAuthControllers, controllerCategorys.deleteMyProduct);
+router.post('/userViewedTheAlert', controllerSignin.isAuthControllers, controllerCategorys.userViewedTheAlert);
+
+
 
 
 

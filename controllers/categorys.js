@@ -187,13 +187,50 @@ exports.getMyProductById = async (req, res) => {
 exports.updateMyProduct = async (req, res) => {
     try {
         const data = req.body;
-        console.log(data)
         const resProduct = await productService.updateMyProduct(data)
 
         return res.status(200).json({
             product: resProduct,
             message: 'The post was successfully published!'
         })
+
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ message: "Somthing went worng" });
+    }
+}
+exports.deleteMyProduct = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const cookie = req.cookies.token;
+
+        if (!cookie) {
+            res.status(401).send({ message: "not auth" });
+        }
+        const userId = await userService.getUserIdByToken(cookie);
+        await productService.deleteMyProduct(id, userId)
+
+        return res.status(200).json({ message: 'The post was successfully published!' })
+
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ message: "Somthing went worng" });
+    }
+}
+exports.userViewedTheAlert = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const cookie = req.cookies.token;
+
+        if (!cookie) {
+            res.status(401).send({ message: "not auth" });
+        }
+        const userId = await userService.getUserIdByToken(cookie);
+        const resData = await productService.userViewedTheAlert(id, userId)
+
+        return res.status(200).json({ message: 'The userViewedTheAlert was successfully published!', data: resData })
 
 
     } catch (err) {

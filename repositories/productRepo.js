@@ -2,6 +2,7 @@ const UserNotification = require('../models/userNotification');
 const Like = require('../models/likes');
 const Product = require('../models/product');
 const User = require('../models/users');
+const TypeNotification = require('../models/TypeNotification');
 
 const sequelize = require('../db');
 
@@ -79,7 +80,6 @@ const getAllMyProducts = async (userId) => {
 }
 const getUserIdByProductId = async (productId) => {
     try {
-
         const product = await Product.findOne({
             where: {
                 product_id: productId
@@ -87,6 +87,23 @@ const getUserIdByProductId = async (productId) => {
         });
 
         return product.user_id
+
+        
+
+    } catch (err) {
+        return err
+    }
+}
+const getUserIdByNotificationId = async (notificationId) => {
+    try {
+
+        const notification = await UserNotification.findOne({
+            where: {
+                userNotificationId: notificationId
+            }
+        });
+
+        return notification.userId
 
     } catch (err) {
         return err
@@ -120,7 +137,8 @@ const getAllUserNotifications = async (id) => {
         const notifications = await UserNotification.findAll({
             where: {
                 userId: id
-            }
+            },
+            order: [['userNotificationId', 'DESC']]
         });
 
         return notifications;
@@ -157,7 +175,7 @@ const getProductAndCategoryById = async (id) => {
 }
 const updateMyProduct = async (data) => {
     try {
-      
+
 
         const res = await Product.update({
             title: data.title,
@@ -176,6 +194,36 @@ const updateMyProduct = async (data) => {
         return err;
     }
 }
+
+const deleteMyProduct = async (productId) => {
+    try {
+        const resProduct = await Product.destroy({
+            where: {
+                product_id: productId
+            }
+        });
+        const resLike = await Like.destroy({
+            where: {
+                productId: productId
+            }
+        });
+        const resUserNotification = await UserNotification.destroy({
+            where: {
+                productId: productId
+            }
+        });
+        return resProduct, resLike, resUserNotification;
+    } catch (err) {
+        return err;
+    }
+}
+const userViewedTheAlert = async (notificationId) => {
+    try {
+        return await UserNotification.update({ userViewedTheAlert: true }, { where: { userNotificationId: notificationId } });
+    } catch (err) {
+        return err;
+    }
+}
 module.exports = productRepo = {
     getAllFavoritProducts,
     addFavoritProduct,
@@ -187,6 +235,9 @@ module.exports = productRepo = {
     getAllUserNotifications,
     getUserById,
     getProductAndCategoryById,
-    updateMyProduct
+    updateMyProduct,
+    deleteMyProduct,
+    userViewedTheAlert,
+    getUserIdByNotificationId
 }
 
