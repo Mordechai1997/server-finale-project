@@ -88,7 +88,7 @@ const getUserIdByProductId = async (productId) => {
 
         return product.user_id
 
-        
+
 
     } catch (err) {
         return err
@@ -224,6 +224,28 @@ const userViewedTheAlert = async (notificationId) => {
         return err;
     }
 }
+const ProductsByAdvancedSearch = async (selected, selectedTypeDelivery, title, city, cnt) => {
+    try {
+        const queryList = `SELECT  * FROM products AS p 
+        JOIN categorys AS c ON p.category_type=c.CategoryId
+        WHERE title LIKE '%${title}%'AND  city LIKE '%${city}%'AND  c.CategoryId LIKE '%${selected}%' AND p.delivery_or_loen LIKE '%${selectedTypeDelivery}%' and  p.active = 1 ORDER BY 1 DESC LIMIT ${cnt * 9}`;
+
+        const queryCnt = `SELECT  COUNT(*) as cnt FROM products AS p 
+        JOIN categorys AS c ON p.category_type=c.CategoryId
+        WHERE title LIKE '%${title}%'AND  city LIKE '%${city}%'AND  c.CategoryId LIKE '%${selected}%'
+        AND p.delivery_or_loen  LIKE '%${selectedTypeDelivery}%' and  p.active = 1 `;
+
+        const [resultsList, metadataList] = await sequelize.query(queryList);
+        const [resultsCnt, metadataCnt] = await sequelize.query(queryCnt);
+
+        list = resultsList.slice(cnt * 9 - 9, cnt * 9);
+        count = resultsCnt[0].cnt;
+        console.log(resultsCnt,list, count, resultsList)
+        return { list, count }
+    } catch (err) {
+        return err;
+    }
+}
 module.exports = productRepo = {
     getAllFavoritProducts,
     addFavoritProduct,
@@ -238,6 +260,7 @@ module.exports = productRepo = {
     updateMyProduct,
     deleteMyProduct,
     userViewedTheAlert,
-    getUserIdByNotificationId
+    getUserIdByNotificationId,
+    ProductsByAdvancedSearch
 }
 

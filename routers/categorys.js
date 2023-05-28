@@ -32,6 +32,8 @@ router.get('/getMyProductById', controllerSignin.isAuthControllers, controllerCa
 router.post('/updateMyProduct', controllerSignin.isAuthControllers, controllerCategorys.updateMyProduct);
 router.post('/deleteMyProduct', controllerSignin.isAuthControllers, controllerCategorys.deleteMyProduct);
 router.post('/userViewedTheAlert', controllerSignin.isAuthControllers, controllerCategorys.userViewedTheAlert);
+router.post('/ProductsByAdvancedSearch', controllerSignin.isAuthControllers, controllerCategorys.ProductsByAdvancedSearch);
+
 
 
 

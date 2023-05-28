@@ -116,6 +116,16 @@ const userViewedTheAlert = async (notificationId, userId) => {
         return err;
     }
 }
+const ProductsByAdvancedSearch = async (selected, selectedTypeDelivery, title, city, cnt) => {
+    try {
+        const { list, count } = await productRepo.ProductsByAdvancedSearch(selected, selectedTypeDelivery, title, city, cnt)
+        console.log(list, count)
+        return { list, count };
+
+    } catch (err) {
+        return err;
+    }
+}
 module.exports = productService = {
     getAllFavoritProducts,
     addFavoritProduct,
@@ -126,6 +136,7 @@ module.exports = productService = {
     getMyProductAndCategoryById,
     updateMyProduct,
     deleteMyProduct,
-    userViewedTheAlert
+    userViewedTheAlert,
+    ProductsByAdvancedSearch
 }
 

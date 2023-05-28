@@ -238,3 +238,17 @@ exports.userViewedTheAlert = async (req, res) => {
         res.status(500).send({ message: "Somthing went worng" });
     }
 }
+
+exports.ProductsByAdvancedSearch = async (req, res) => {
+    try {
+        const { selected, selectedTypeDelivery, title, city, cnt } = req.body;
+        console.log(req.body)
+        const { list, count } = await productService.ProductsByAdvancedSearch(selected, selectedTypeDelivery, title, city, cnt)
+        console.log(list, count)
+        res.status(200).send({ list, count })
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ message: "Somthing went worng" });
+    }
+}

@@ -207,7 +207,7 @@ exports.isAuthControllers = (req, res, next) => {
 exports.getEmailUserByMemberId = async (req, res, next) => {
     try {
         var { id, productId } = req.query;
-        
+
         const cookie = req.cookies.token;
         if (!cookie) {
             res.status(401).send({ message: "not auth" });
@@ -246,6 +246,23 @@ exports.getAllUserNotifications = async (req, res, next) => {
         return res.status(200).send(notifications);
     } catch (err) {
         return res.status(200).send({ type: "error", message: err + " " });
+    }
+
+}
+exports.ContactUsEmail = (req, res, next) => {
+    var { message, email, item } = req.body;
+    console.log("\n"+ message, email+"\n")
+    try {
+
+        userService.ContactUsEmail(message, email, item);
+        return res.status(200).send({
+            message: "Email sent successfully"
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "Something goes to wrong. Please try again"
+        })
     }
 
 }
